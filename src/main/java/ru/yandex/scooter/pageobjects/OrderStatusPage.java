@@ -7,14 +7,14 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 public class OrderStatusPage {
-    WebDriver driver;
+    private final WebDriver driver;
     // Кнопка "Отменить заказ"
-    By orderCancelButton = By.xpath(".//button[text()='Отменить заказ']");
+    private final By orderCancelButton = By.xpath(".//button[text()='Отменить заказ']");
     // Кнопка "Отменить" (Посе кнопки "Отменить заказ")
-    By orderCancelCancelButton = By.xpath(".//button[text()='Отменить']");
-    By orderCancelled = By.className("Order_ModalHeader__3FDaJ");
+    private final By orderCancelCancelButton = By.xpath(".//button[text()='Отменить']");
+    private final By orderCancelled = By.className("Order_ModalHeader__3FDaJ");
     // Информация о заказе
-    By orderInfo = By.className("Track_Value__15eEX");
+    private final By orderInfo = By.className("Track_Value__15eEX");
 
     public OrderStatusPage(WebDriver driver) {
         this.driver = driver;

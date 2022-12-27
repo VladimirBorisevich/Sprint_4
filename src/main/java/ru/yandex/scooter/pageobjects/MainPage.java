@@ -4,23 +4,21 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class MainPage {
-    WebDriver driver;
+    private final WebDriver driver;
     // Кнопка логотипа "Яндекс"
-    By yandexLogo = By.className("Header_LogoYandex__3TSOI");
+    private final By yandexLogo = By.className("Header_LogoYandex__3TSOI");
     //Кнопка логотипа "Самокат"
-    By scooterLogo = By.className("Header_LogoScooter__3lsAR");
+    private final By scooterLogo = By.className("Header_LogoScooter__3lsAR");
     // Кнопка "Заказать" вверху страницы
-    By orderButtonHeader = By.xpath(".//div[@class='Header_Nav__AGCXC']//button[@class='Button_Button__ra12g']");
+    private final By orderButtonHeader = By.xpath(".//div[@class='Header_Nav__AGCXC']//button[@class='Button_Button__ra12g']");
     // Кнопка "Заказать" посередине страницы
-    By orderButtonMiddle = By.xpath(".//div[@class='Home_FinishButton__1_cWm']//button");
+    private final By orderButtonMiddle = By.xpath(".//div[@class='Home_FinishButton__1_cWm']//button");
     // Кнопка "Статус заказа"
-    By orderStatus = By.className("Header_Link__1TAG7");
+    private final By orderStatus = By.className("Header_Link__1TAG7");
     // Поле ввода заказа
-    By orderStatusInput = By.xpath("//input[@placeholder]");
+    private final By orderStatusInput = By.xpath("//input[@placeholder]");
     // Кнопка "Go!"
-    By goButton = By.xpath("//button[text()='Go!']");
-    // Вопросы о важном
-    By impotentQuestions = By.className("accordion__button");
+    private final By goButton = By.xpath("//button[text()='Go!']");
 
     public MainPage(WebDriver driver) {
         this.driver = driver;
@@ -54,5 +52,15 @@ public class MainPage {
 
     public void clickButtonGo() {
         driver.findElement(goButton).click();
+    }
+
+    public Boolean isAnswerVisible(int index) {
+        By element = By.id("accordion__panel-" + index);
+        return driver.findElement(element).isDisplayed();
+    }
+
+    public void clickQuestion(int index) {
+        By element = By.id("accordion__heading-" + index);
+        driver.findElement(element).click();
     }
 }

@@ -1,26 +1,28 @@
 package ru.yandex.scooter.pageobjects;
 
+import org.hamcrest.MatcherAssert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertTrue;
+
 public class RentPage {
-    WebDriver driver;
+    private final WebDriver driver;
     // Поле "Когда привезти самокат"
-    By rentDate = By.cssSelector("div.react-datepicker__input-container>input");
+    private final By rentDate = By.cssSelector("div.react-datepicker__input-container>input");
     // Стрелка с выпадающим списом
-    By rentTime = By.className("Dropdown-arrow");
+    private final By rentTime = By.className("Dropdown-arrow");
     // Список дней аренды
-    By rentTimeDays = By.className("Dropdown-option");
+    private final By rentTimeDays = By.className("Dropdown-option");
     // Кнопка "Заказать"
-    By orderButton = By.xpath(".//div[@class='Order_Buttons__1xGrp']//button[text()='Заказать']");
+    private final By orderButton = By.xpath(".//div[@class='Order_Buttons__1xGrp']//button[text()='Заказать']");
     // Кнопка "Да"
-    By getOrderYesButton = By.xpath(".//button[text()='Да']");
+    private final By getOrderYesButton = By.xpath(".//button[text()='Да']");
     // Информация подтверждения заказа
-    By orderConfirmation = By.className("Order_ModalHeader__3FDaJ");
-    // Номер заказа
-    By orderNumber = By.className("Order_Text__2broi");
+    private final By orderConfirmation = By.className("Order_ModalHeader__3FDaJ");
     // Кнопка "Посмотреть заказ"
-    By watchStatusButton = By.cssSelector(".Order_NextButton__1_rCA > button");
+    private final By watchStatusButton = By.cssSelector(".Order_NextButton__1_rCA > button");
 
     public RentPage(WebDriver driver) {
         this.driver = driver;
@@ -52,11 +54,20 @@ public class RentPage {
         return driver.findElement(orderConfirmation).getText();
     }
 
-    public String getOrderNumber() {
-        return driver.findElement(orderNumber).getText().split("\\s+")[2];
-    }
-
     public void clickWatchStatusButton() {
         driver.findElement(watchStatusButton).click();
+    }
+
+    public void fillRentPage(String rentDate, int rentTimeDays) {
+        this.setRentDate(rentDate);
+        this.clickRentTime();
+        this.clickRentTimeDays(rentTimeDays);
+        this.clickOrderButton();
+        this.clickOrderYesButton();
+        String confirmationText = this.getOrderConfirmation();
+        // Проверка того, что появилось окно с подтверждением заказа
+        assertTrue(driver.findElement(orderConfirmation).isDisplayed());
+        MatcherAssert.assertThat(confirmationText, containsString("оформлен"));
+        this.clickWatchStatusButton();
     }
 }

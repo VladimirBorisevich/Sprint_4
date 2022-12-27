@@ -6,21 +6,21 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 public class OrderPage {
-    WebDriver driver;
+    private final WebDriver driver;
     // Поле "Имя"
-    By name = By.xpath(".//input[@placeholder='* Имя']");
+    private final By name = By.xpath(".//input[@placeholder='* Имя']");
     // Поле "Фамилия"
-    By surName = By.xpath(".//input[@placeholder='* Фамилия']");
+    private final By surName = By.xpath(".//input[@placeholder='* Фамилия']");
     // Поле "Адрес"
-    By address = By.xpath(".//input[contains(@placeholder,'Адрес')]");
+    private final By address = By.xpath(".//input[contains(@placeholder,'Адрес')]");
     // Кнопка "Метро" с выпадающим списком
-    By metroButton = By.className("select-search__input");
+    private final By metroButton = By.className("select-search__input");
     // Список станций метро
-    By metroStation = By.className("select-search__row");
+    private final By metroStation = By.className("select-search__row");
     // Поле "Номер телефона"
-    By phoneNumber = By.xpath(".//input[contains(@placeholder,'Телефон')]");
+    private final By phoneNumber = By.xpath(".//input[contains(@placeholder,'Телефон')]");
     // Кнопка "Далее"
-    By nextButton = By.xpath(".//button[text()='Далее']");
+    private final By nextButton = By.xpath(".//button[text()='Далее']");
 
     public OrderPage(WebDriver driver) {
         this.driver = driver;
@@ -61,6 +61,19 @@ public class OrderPage {
     }
 
     public void clickButtonNext() {
-        driver.findElement(nextButton).click();
+        WebElement element = driver.findElement(nextButton);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);
+        element.click();
+    }
+
+    public void fillOrderPage(String name, String surName, String address,
+                              String phoneNumber, int metroStation) {
+        this.setName(name);
+        this.setSurName(surName);
+        this.setAddress(address);
+        this.setPhoneNumber(phoneNumber);
+        this.clickButtonMetro();
+        this.setMetro(metroStation);
+        this.clickButtonNext();
     }
 }
