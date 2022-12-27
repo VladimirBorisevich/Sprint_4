@@ -8,8 +8,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,12 +20,11 @@ public class QuestionsAndAnswersTest {
 
     @Before
     public void setUp() {
-        WebDriverManager.firefoxdriver().setup();
-        FirefoxOptions options = new FirefoxOptions();
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
-        driver = new FirefoxDriver(options);
+        driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
         driver.get("https://qa-scooter.praktikum-services.ru/");
         WebElement element = driver.findElement(By.cssSelector(".Home_FAQ__3uVm4"));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", element);

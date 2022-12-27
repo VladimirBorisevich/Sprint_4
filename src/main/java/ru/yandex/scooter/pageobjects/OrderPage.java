@@ -66,8 +66,7 @@ public class OrderPage {
         element.click();
     }
 
-    public void fillOrderPage(String name, String surName, String address,
-                              String phoneNumber, int metroStation) {
+    public void fillOrderPage(String name, String surName, String address, String phoneNumber, int metroStation) {
         this.setName(name);
         this.setSurName(surName);
         this.setAddress(address);

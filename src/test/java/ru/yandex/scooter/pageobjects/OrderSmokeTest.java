@@ -7,14 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(Parameterized.class)
 public class OrderSmokeTest {
@@ -26,7 +25,6 @@ public class OrderSmokeTest {
     private final String rentDate;
     private final int rentTimeDays;
     private WebDriver driver;
-
 
     public OrderSmokeTest(String name, String surName, String address,
                           String phoneNumber, int metroStation,
@@ -49,10 +47,10 @@ public class OrderSmokeTest {
 
     @Before
     public void setUp() {
-        WebDriverManager.firefoxdriver().setup();
-        FirefoxOptions options = new FirefoxOptions();
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox", "--disable-dev-shm-usage");
-        driver = new FirefoxDriver(options);
+        driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get("https://qa-scooter.praktikum-services.ru/");
@@ -68,14 +66,8 @@ public class OrderSmokeTest {
         // Заполняем вторую страницу заказа
         RentPage rentPage = new RentPage(driver);
         rentPage.fillRentPage(rentDate, rentTimeDays);
-
-        OrderStatusPage orderStatusPage = new OrderStatusPage(driver);
-        List<WebElement> orderInfo = orderStatusPage.getOrderInfo();
-        // Проверка полей статуса заказа
-        assertEquals(orderInfo.get(0).getText(), name);
-        assertEquals(orderInfo.get(1).getText(), surName);
-        assertEquals(orderInfo.get(2).getText(), address);
-        assertEquals(orderInfo.get(4).getText(), phoneNumber);
+        // Проверка того, что появилось окно с подтверждением заказа
+        assertThat(rentPage.isOrderConfirmationDisplayed(), containsString("Заказ оформлен"));
     }
 
     @After
