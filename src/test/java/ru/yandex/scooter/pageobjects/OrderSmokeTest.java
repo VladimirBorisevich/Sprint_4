@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(Parameterized.class)
 public class OrderSmokeTest {
+    private final boolean flagButton;
     private final String name;
     private final String surName;
     private final String address;
@@ -26,9 +27,10 @@ public class OrderSmokeTest {
     private final int rentTimeDays;
     private WebDriver driver;
 
-    public OrderSmokeTest(String name, String surName, String address,
+    public OrderSmokeTest(boolean flagButton, String name, String surName, String address,
                           String phoneNumber, int metroStation,
                           String rentDate, int rentTimeDays) {
+        this.flagButton = flagButton;
         this.name = name;
         this.surName = surName;
         this.address = address;
@@ -40,9 +42,11 @@ public class OrderSmokeTest {
 
     @Parameterized.Parameters
     public static Object[][] getData() {
-        return new Object[][]{{"Вася", "Вася", "г. Москва", "+79999999999", 30, "09.12.2022", 1},
-                {"Оля", "Петровна", "Москва-сити", "+71111111111", 20, "05.10.2022", 3},
-                {"Петр", "Черный", "ул. Пушкина д. 15", "81234567890", 1, "01.01.2021", 2}};
+        return new Object[][]{
+                {false, "Вася", "Вася", "г. Москва", "+79999999999", 30, "09.12.2022", 1},
+                {true, "Оля", "Петровна", "Москва-сити", "+71111111111", 20, "05.10.2022", 3},
+                {true, "Петр", "Черный", "ул. Пушкина д. 15", "81234567890", 1, "01.01.2021", 2}
+        };
     }
 
     @Before
@@ -59,7 +63,7 @@ public class OrderSmokeTest {
     @Test
     public void makeOrderTest() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.clickOrderButtonHeader();
+        mainPage.clickOrderButton(flagButton);
         // Заполняем первую страницу заказа
         OrderPage orderPage = new OrderPage(driver);
         orderPage.fillOrderPage(name, surName, address, phoneNumber, metroStation);
@@ -67,7 +71,9 @@ public class OrderSmokeTest {
         RentPage rentPage = new RentPage(driver);
         rentPage.fillRentPage(rentDate, rentTimeDays);
         // Проверка того, что появилось окно с подтверждением заказа
-        assertThat(rentPage.isOrderConfirmationDisplayed(), containsString("Заказ оформлен"));
+        assertThat("Должен быть текст с подтверждением заказ",
+                    rentPage.isOrderConfirmationDisplayed(),
+                    containsString("Заказ оформлен"));
     }
 
     @After
